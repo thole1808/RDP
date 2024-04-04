@@ -1,4 +1,4 @@
-name: Ngrok Remote Desktop
+name: Ngrok Tunnel
 
 on:
   push:
@@ -12,15 +12,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Setup Ngrok
         run: |
           mkdir ngrok
           cd ngrok
-          wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-          unzip ngrok-stable-linux-amd64.zip
-          chmod +x ngrok
-          ./ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
+          curl -O https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip
+          Expand-Archive -Path ngrok-stable-windows-amd64.zip -DestinationPath .
+          $env:NGROK_AUTHTOKEN = ${{ secrets.NGROK_AUTH_TOKEN }}
+          ./ngrok authtoken $env:NGROK_AUTHTOKEN
       
-      - name: Start Ngrok Remote Desktop
+      - name: Start Ngrok Tunnel
         run: ./ngrok tcp 3389

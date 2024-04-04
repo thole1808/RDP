@@ -1,0 +1,26 @@
+name: Ngrok Remote Desktop
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Setup Ngrok
+        run: |
+          mkdir ngrok
+          cd ngrok
+          wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+          unzip ngrok-stable-linux-amd64.zip
+          chmod +x ngrok
+          ./ngrok authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
+      
+      - name: Start Ngrok Remote Desktop
+        run: ./ngrok tcp 3389
